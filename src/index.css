@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+/* => sẽ có class: text-10 */
+@theme {
+    /* --text-10: 10px; */
+    --color-primary: #246aa3;
+    --color-dark-100: #f8f7fa;
+    --color-dark-200: #4b465c;
+}
+
+body {
+    font-family: "Public Sans Variable", sans-serif;
+}
