@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-function TextInput({ name, value, type = "text", onChange }) {
+function TextInput({ name, value, type = "text", error, onChange }) {
     return (
         <TextField
             fullWidth
@@ -15,6 +15,7 @@ function TextInput({ name, value, type = "text", onChange }) {
             name={name}
             value={value}
             type={type}
+            error={error}
             onChange={onChange}
         />
     );

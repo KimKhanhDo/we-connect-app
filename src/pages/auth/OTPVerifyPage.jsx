@@ -1,13 +1,40 @@
 import { Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import FormField from "@/components/FormField";
-import OPTInput from "@/components/FormInputs/OPTInput";
+import OTPInput from "@/components/FormInputs/OTPInput";
+import { useVerifyOTPMutation } from "@/services/rootApi";
+import { openSnackbar } from "@/redux/slices/snackbarSlice";
+import { login } from "@/redux/slices/authSlice";
 
 function OTPVerifyPage() {
-    const { control } = useForm();
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { control, handleSubmit } = useForm();
 
+    const [verifyOTP, { data, isError, error, isSuccess }] =
+        useVerifyOTPMutation();
+
+    const onSubmit = (formData) => {
+        verifyOTP({ otp: formData.otp, email: location?.state?.email });
+    };
+
+    useEffect(() => {
+        if (isError) {
+            dispatch(
+                openSnackbar({ type: "error", message: error?.data?.message }),
+            );
+        }
+
+        if (isSuccess) {
+            dispatch(login(data));
+            navigate("/");
+        }
+    }, [error, isError, dispatch, isSuccess, navigate, data]);
     return (
         <div>
             <div className="text-dark-200">
@@ -19,15 +46,20 @@ function OTPVerifyPage() {
                     from the mobile in the field below.
                 </p>
             </div>
-            <form className="flex flex-col gap-4">
+            <form
+                className="flex flex-col gap-4"
+                onSubmit={handleSubmit(onSubmit)}
+            >
                 <FormField
-                    name="email"
+                    name="otp"
                     label="Type your 6 digit security code"
                     control={control}
-                    Component={OPTInput}
+                    Component={OTPInput}
                 />
 
-                <Button variant="contained">Verify my account</Button>
+                <Button variant="contained" type="submit">
+                    Verify my account
+                </Button>
             </form>
             <p className="mt-4">
                 Didn't get the code?{" "}

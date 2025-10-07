@@ -1,7 +1,10 @@
-import { lazy } from "react";
+import { ThemeProvider } from "@mui/material";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
+import { lazy } from "react";
+import { Provider } from "react-redux";
+import { persistor, store } from "@/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 import "./index.css";
 import RootLayout from "@pages/RootLayout.jsx";
@@ -10,7 +13,9 @@ import theme from "@/configs/muiConfig";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import AuthLayout from "@/pages/auth/AuthLayout";
 import LoginPage from "@/pages/auth/LoginPage";
-import OTPVerifyPage from "./pages/auth/OTPVerifyPage";
+import OTPVerifyPage from "@/pages/auth/OTPVerifyPage";
+import ProtectedLayout from "@/pages/ProtectedLayout";
+import MessagePage from "@/pages/MessagePage";
 
 // Lazy import
 const HomePage = lazy(() => import("@pages/HomePage.jsx"));
@@ -20,8 +25,17 @@ const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             {
-                path: "/",
-                element: <HomePage />,
+                element: <ProtectedLayout />,
+                children: [
+                    {
+                        path: "/",
+                        element: <HomePage />,
+                    },
+                    {
+                        path: "/messages",
+                        element: <MessagePage />,
+                    },
+                ],
             },
             {
                 element: <AuthLayout />,
@@ -45,9 +59,13 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-    <ThemeProvider theme={theme}>
-        <ModalProvider>
-            <RouterProvider router={router} />
-        </ModalProvider>
-    </ThemeProvider>,
+    <Provider store={store}>
+        <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
+            <ThemeProvider theme={theme}>
+                <ModalProvider>
+                    <RouterProvider router={router} />
+                </ModalProvider>
+            </ThemeProvider>
+        </PersistGate>
+    </Provider>,
 );

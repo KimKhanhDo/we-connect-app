@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
+import { FormHelperText } from "@mui/material";
 import { Controller } from "react-hook-form";
 
-function FormField({ control, label, name, type, Component }) {
+function FormField({ control, label, name, type, error, Component }) {
     return (
         <div>
             <p className="text-dark-200 mb-1 text-sm font-bold">{label}</p>
@@ -17,11 +18,16 @@ function FormField({ control, label, name, type, Component }) {
                             value={value}
                             type={type}
                             control={control}
+                            error={error?.message}
                             onChange={onChange}
                         />
                     );
                 }}
             />
+
+            {error?.message && (
+                <FormHelperText error={true}>{error.message}</FormHelperText>
+            )}
         </div>
     );
 }
