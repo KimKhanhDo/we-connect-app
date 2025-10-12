@@ -14,13 +14,19 @@ function OTPVerifyPage() {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { control, handleSubmit } = useForm();
+
+    // Khi kiểm soát việc thay đổi dữ liệu của input với value & onChange thì phải có default value
+    const { control, handleSubmit } = useForm({
+        defaultValues: {
+            otp: "",
+        },
+    });
 
     const [verifyOTP, { data, isError, error, isSuccess }] =
         useVerifyOTPMutation();
 
     const onSubmit = (formData) => {
-        verifyOTP({ otp: formData.otp, email: location?.state?.email });
+        verifyOTP({ email: location?.state?.email, otp: formData.otp });
     };
 
     useEffect(() => {
@@ -30,6 +36,7 @@ function OTPVerifyPage() {
             );
         }
 
+        // data trả về là accessToken & refreshToken -> dùng làm tham số cho login
         if (isSuccess) {
             dispatch(login(data));
             navigate("/");

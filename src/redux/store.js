@@ -16,12 +16,14 @@ import {
 import { rootApi } from "@/services/rootApi";
 import authReducer from "@/redux/slices/authSlice";
 import snackbarReducer from "@/redux/slices/snackbarSlice";
+import settingsReducer from "@/redux/slices/settingsSlice";
 import { logoutMiddleware } from "./middlewares";
 
 // ⭐ BƯỚC 1: Combine reducers thành 1 reducer function
 const rootReducer = combineReducers({
     auth: authReducer,
     snackbar: snackbarReducer,
+    settings: settingsReducer,
     [rootApi.reducerPath]: rootApi.reducer,
 });
 

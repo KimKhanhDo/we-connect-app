@@ -39,6 +39,12 @@ function LoginPage() {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(formSchema),
+
+        // Khi kiểm soát việc thay đổi dữ liệu của input với value & onChange thì phải có default value
+        defaultValues: {
+            email: "",
+            password: "",
+        },
     });
 
     function onSubmit(formData) {

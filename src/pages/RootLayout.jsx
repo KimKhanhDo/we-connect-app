@@ -11,7 +11,7 @@ function RootLayout() {
     const { open, type, message } = useSelector((state) => state.snackbar);
 
     return (
-        <div>
+        <div className="text-dark-200">
             {/* For lazing loading */}
             <Suspense fallback={<p>Loading</p>}>
                 <Outlet />

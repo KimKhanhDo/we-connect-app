@@ -15,7 +15,7 @@ function RegisterPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [register, { data = {}, isLoading, isSuccess, isError, error }] =
+    const [register, { data = {}, isSuccess, isError, error }] =
         useRegisterMutation();
 
     // Validate data with yup
@@ -37,6 +37,12 @@ function RegisterPage() {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(formSchema), // ← Kết nối Yup với React Hook Form
+        // Khi kiểm soát việc thay đổi dữ liệu của input với value & onChange thì phải có default value
+        defaultValues: {
+            fullName: "",
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit = (formData) => {

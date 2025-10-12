@@ -1,5 +1,4 @@
 import { logOut } from "@/redux/slices/authSlice";
-// import { persistor } from "@/redux/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
@@ -8,7 +7,7 @@ const baseQuery = fetchBaseQuery({
     // getState được RTK Query tự động cung cấp
     // Đây là tham số thứ 2 của callback prepareHeaders
     prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.accessToken;
+        const token = getState().auth.accessToken; // ← Đọc token từ authSlice
         if (token) headers.set("Authorization", `Bearer ${token}`);
         return headers;
     },
@@ -18,8 +17,7 @@ const baseQueryWithForceLogout = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
     if (result?.error?.status === 401) {
-        api.dispatch(logOut());
-        // await persistor.purge();
+        api.dispatch(logOut()); // ← Gọi action từ authSlice
         window.location.href = "/login";
     }
 
@@ -78,6 +76,14 @@ export const {
     useVerifyOTPMutation,
     useGetAuthUserQuery,
 } = rootApi;
+
+/**
+ * 📁 Services (rootApi.js)
+        Nhiệm vụ: Gọi API đến backend (HTTP requests)
+        Công nghệ: RTK Query - một phần của Redux Toolkit
+        Chức năng: Định nghĩa các endpoints (register, login, verifyOTP, getAuthUser)
+ * 
+ */
 
 // ========== MUTATIONS ==========
 // Mutations dùng cho các thao tác THAY ĐỔI dữ liệu (POST, PUT, PATCH, DELETE)
